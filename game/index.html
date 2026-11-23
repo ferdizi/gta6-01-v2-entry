@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LAGUNA AZUL — Open-World Getaway</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+  <canvas id="scene"></canvas>
+  <div id="vignette"></div>
+
+  <div id="hud" class="hidden">
+    <!-- (1) Mission panel, top-left -->
+    <div id="mission-panel" class="panel">
+      <div class="mp-head"><span id="mp-num">MISSION 8/10</span><span id="mp-tag">STORY</span></div>
+      <div id="mp-name">THE LAGUNA HEIST</div>
+      <div class="mp-stage"><div id="mp-stage-fill"></div><span id="mp-stage-label">STAGE 3 / 4</span></div>
+      <div id="mp-objective">▶ Reach the causeway checkpoint with the crew</div>
+      <div id="mp-next">NEXT: Lose the air unit in the marina shallows</div>
+    </div>
+
+    <!-- (2) Police dispatch panel, left -->
+    <div id="dispatch-panel" class="panel">
+      <div class="dp-head">🚨 AZUL PD — DISPATCH <span id="dp-count">6 UNITS</span></div>
+      <div id="dp-rows"></div>
+    </div>
+
+    <!-- (3) Cash / wanted / clock, top-right -->
+    <div id="status-panel">
+      <div id="cash">$<span id="cash-val">48,250</span></div>
+      <div id="stars">★★★★☆</div>
+      <div id="clock">18:42 <span id="day">FRI</span></div>
+      <div id="air-banner">🚁 AIR UNIT DEPLOYED</div>
+      <div id="sight-banner">👁 IN SIGHT</div>
+    </div>
+
+    <!-- (5) Weapon slots, right -->
+    <div id="weapons">
+      <div class="wslot" data-k="1"><span class="wk">1</span><span class="wi">👊</span><span class="wn">FISTS</span></div>
+      <div class="wslot active" data-k="2"><span class="wk">2</span><span class="wi">🔫</span><span class="wn">PISTOL</span><span class="wa" id="ammo-pistol">48</span></div>
+      <div class="wslot" data-k="3"><span class="wk">3</span><span class="wi">🔫</span><span class="wn">SMG</span><span class="wa">120</span></div>
+      <div class="wslot" data-k="4"><span class="wk">4</span><span class="wi">💥</span><span class="wn">STICKY</span><span class="wa">3</span></div>
+      <div class="wslot" data-k="5"><span class="wk">5</span><span class="wi">🔪</span><span class="wn">BLADE</span></div>
+    </div>
+
+    <!-- (6) Crew ability cards, right -->
+    <div id="crew">
+      <div class="crew-card" id="crew-rio">
+        <div class="crew-face" style="background:#e8a04c">😎</div>
+        <div class="crew-info"><b>RIO</b><span>DRIVER · YOU</span><i>SLIPSTREAM [Q]</i></div>
+        <div class="crew-cd" id="cd-rio">READY</div>
+      </div>
+      <div class="crew-card" id="crew-luz">
+        <div class="crew-face" style="background:#c65b7c">👩</div>
+        <div class="crew-info"><b>LUZ</b><span>HACKER</span><i>BLACKOUT [E]</i></div>
+        <div class="crew-cd" id="cd-luz">READY</div>
+      </div>
+      <div class="crew-card" id="crew-marco">
+        <div class="crew-face" style="background:#5b8fc6">🧔</div>
+        <div class="crew-info"><b>MARCO</b><span>ENFORCER</span><i>ADRENALINE [R]</i></div>
+        <div class="crew-cd" id="cd-marco">READY</div>
+      </div>
+    </div>
+
+    <!-- (3) Minimap + vitals, bottom-left -->
+    <div id="vitals">
+      <canvas id="minimap" width="180" height="180"></canvas>
+      <div class="vitals-rows">
+        <div class="vbar"><span>HEALTH</span><div class="bar"><div id="health-fill" style="width:82%"></div></div><b id="health-num">82</b></div>
+        <div class="vbar"><span>ARMOUR</span><div class="bar"><div id="armour-fill" style="width:64%"></div></div><b id="armour-num">64</b></div>
+        <div id="location">📍 MARINA DISTRICT — <span id="standing">RESPECTED ★★★</span></div>
+      </div>
+    </div>
+
+    <!-- (7) Dialogue, bottom-center -->
+    <div id="dialogue" class="panel">
+      <div class="dlg-face">👩</div>
+      <div class="dlg-body">
+        <div class="dlg-name">LUZ <span>— HACKER · CREW</span></div>
+        <div id="dlg-line">“Rio, the air unit is painting us — cut through the marina shallows, their spotlight can't hold the water.”</div>
+      </div>
+    </div>
+
+    <!-- (8) Speedo, bottom-right -->
+    <div id="speedo">
+      <div id="speed-val">87</div>
+      <div id="speed-unit">MPH</div>
+      <div id="vehicle-name">VULCAR NEBULA GT</div>
+      <div id="vehicle-cond">CONDITION 92% · FUEL ⛽ 78%</div>
+      <div id="radio">📻 RADIO AZUL — “Golden Hour FM” ♪ Marisol Vega</div>
+    </div>
+
+    <div id="crosshair">+</div>
+    <div id="toast"></div>
+    <div id="bonus-pop"></div>
+    <div id="wanted-flash">WANTED LEVEL 4 — AZUL PD AIR UNIT INBOUND</div>
+  </div>
+
+  <!-- Start screen -->
+  <div id="start-screen">
+    <div class="ss-inner">
+      <div class="ss-kicker">A LAGUNA AZUL STORY · OPEN WORLD</div>
+      <h1>LAGUNA<br>AZUL</h1>
+      <div class="ss-sub">Dante “Rio” Marín — getaway driver. One last bank job.<br>Ten missions. Five stars. One golden hour to disappear.</div>
+      <div class="ss-buttons">
+        <button id="btn-new">▶ NEW GAME</button>
+        <button id="btn-continue">↻ CONTINUE</button>
+        <button id="btn-free">🌴 FREE ROAM</button>
+      </div>
+      <div class="ss-controls">
+        <span><b>WASD</b> move / drive</span><span><b>SHIFT</b> sprint</span><span><b>E</b> enter / exit car</span>
+        <span><b>CLICK</b> shoot</span><span><b>SPACE</b> jump / handbrake</span><span><b>Q</b> slipstream</span>
+        <span><b>M</b> map</span><span><b>P</b> pause</span>
+      </div>
+      <div class="ss-save" id="save-line">No save found — a fresh start on the Azul coast.</div>
+      <div class="ss-foot">An original game. Laguna Azul, its people and its streets are fiction — no Rockstar content, no real city.</div>
+    </div>
+  </div>
+
+  <div id="pause-screen" class="hidden">
+    <h2>PAUSED</h2>
+    <div>Press P to resume · progress auto-saves to this browser</div>
+    <button id="btn-resume">RESUME</button>
+  </div>
+</div>
+<script>
+window.__consoleErrors = [];
+window.addEventListener('error', (e) => { window.__consoleErrors.push(String(e.message)); window.__gameError = String(e.message); });
+const __cerr = console.error.bind(console);
+console.error = (...a) => { window.__consoleErrors.push(a.map(String).join(' ')); __cerr(...a); };
+</script>
+<script src="vendor/three.min.js"></script>
+<script src="js/rng.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/world.js"></script>
+<script src="js/entities.js"></script>
+<script src="js/missions.js"></script>
+<script src="js/hud.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
