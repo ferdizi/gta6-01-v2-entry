@@ -51,8 +51,12 @@ for (const f of shotFiles) {
 
 /* ---- staging ---- */
 try {
-  rmSync(outDir, { recursive: true, force: true });
+  // Clear the output directory's contents WITHOUT removing the directory
+  // itself: the grader mounts /output as a Docker volume, and rmdir on a
+  // mount point fails EBUSY ("device or resource busy") — the old
+  // rmSync(outDir, {recursive:true}) aborted the whole run (exit 1).
   mkdirSync(outDir, { recursive: true });
+  for (const e of readdirSync(outDir)) rmSync(join(outDir, e), { recursive: true, force: true });
   cpSync(gameDir, join(outDir, 'game'), { recursive: true });
   cpSync(shotsDir, join(outDir, 'screenshots'), { recursive: true });
 
