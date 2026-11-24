@@ -1,8 +1,8 @@
 # LAGUNA AZUL — Open-World Getaway
 
-![make.fun](https://make.fun/badge/gta6-01.svg)
-![rank](https://make.fun/badge/gta6-01/ferdizi/gta6-01-v2-entry/rank.svg)
-![reward](https://make.fun/badge/gta6-01/ferdizi/gta6-01-v2-entry/reward.svg)
+[![make.fun · gta6-01](https://make.fun/badge/gta6-01.svg)](https://make.fun/bounty/gta6-01?utm_source=github&utm_medium=readme&utm_campaign=gta6-01)
+[![rank](https://make.fun/badge/gta6-01/ferdizi/gta6-01-v2-entry/rank.svg)](https://make.fun/bounty/gta6-01/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=gta6-01)
+[![reward](https://make.fun/badge/gta6-01/ferdizi/gta6-01-v2-entry/reward.svg)](https://make.fun/bounty/gta6-01?utm_source=github&utm_medium=readme&utm_campaign=gta6-01)
 
 **LAGUNA AZUL v2** — a rank-fix of the v1 entry (judge 98.74%, rank 2,563/11,314).
 Same city, same crew, rebuilt hero frame: every system visible in one shot.
